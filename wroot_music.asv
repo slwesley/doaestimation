@@ -1,0 +1,76 @@
+function doa = wroot_music(R,array,D,grid,d)
+%% Function Description
+%
+% Compute "D" MUSIC DoA based on the sample covariance matrix R.
+% This function returns D DoAs, as well as the MUSIC null pseudo-spectrum
+%
+%% Variables Description
+%
+% R: received signal covariance matrix
+% array: sensors positions
+% D: number of impinging sources
+% grid: discretized search grid
+% d: minimum inter-element spacing
+% doa: normalized DoAs (sine of DoA estimates)
+
+%% References
+%
+% [1] % [1] Chen, W., Wong, K. M., & Reilly, J. P. (1991). Detection of the Number of Signals: A
+% Predicted Eigen-Threshold Approach. IEEE Transactions on Signal Processing, 39(5), 10881098.
+% http://doi.org/10.1109/78.80959
+%
+% Author: Wesley Leite (February, 24th. 2019)
+%
+%% A) MUSIC DoA Estimation
+ngrid = length(grid);
+array = array(:);
+N = length(array);
+[delta,lambda] = eig(R); % perform eigendecomposition on R
+[~,ind] = sort(diag(lambda),'descend'); % Sort eigenvalues in descending order
+delta = delta(:,ind); % rearrange eigenvectors according to the eigenvalues order
+deltan = delta(:,(D+1):N); % take the noise subspace basis
+proj_noise = deltan*deltan'; % projection matrix onto noise subspace
+coeffs_poly = zeros(2*N-1,1); % polynomial coefficients
+
+for j=1:2*N-1
+    coeffs_poly(j) = sum(diag(proj_noise,N-j));
+end
+
+coeffs_poly = coeffs_poly./coeffs_poly(1); % normalization 
+tot_roots = roots(coeffs_poly); 
+
+% take the D roots closest and inside the unit circle (root pruning process)
+[~,idx] = sort(abs(tot_roots(abs(tot_roots)<1)),'descend');
+tot_roots_aux = tot_roots(abs(tot_roots)<1);
+
+n_est_doas = min(D,length(idx));
+roots_final = tot_roots_aux(idx(1:n_est_doas));
+
+
+
+
+for j=1:ngrid
+    a = exp(1i*2*pi*d*array*grid(j));
+    Pmusic(j) = 1/(a'*(deltan*deltan')*a);
+end
+Pmusic = abs(Pmusic);
+% [~,peaksIndex] = findpeaks(Pmusic,'NPeaks',D,'SortStr','descend');
+% peaksIndex = sort(peaksIndex,'ascend');
+% DoA = grid(peaksIndex)'; DoA = DoA(:);
+% % In order to avoid errors in RMSE calculation, attributes random missing angle
+% % values until it reaches the number D of signals
+% % if(length(DoA)<D)
+%     j = length(DoA);
+%     while(length(DoA)<D)
+%         rand_doa = randperm(ngrid);
+%         j=j+1;
+%         DoA(j) = grid(rand_doa(1));
+%     end
+% end
+% if(length(DoA)>D)
+%     while(length(DoA)>D)
+%         DoA(end) = [];
+%     end
+% end
+
+end

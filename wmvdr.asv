@@ -1,0 +1,15 @@
+function [Pmvdr] = wmvdr(R,array,grid,d)
+
+array = array(:);
+ngrid = length(grid);
+pBart = zeros(ngrid,1);
+for i=1:ngrid
+    a = exp(1i*2*pi*d*array*grid(i));   
+    pMvdr(i) = real(1/(a'*(R\a)));
+end
+
+% extract doa from spectrum
+doa = spect2doa(Pmusic,D,grid);
+
+end
+
