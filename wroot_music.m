@@ -1,23 +1,39 @@
 function doa = wroot_music(R,array,D,d)
 %% Function Description
 %
-% Compute "D" DoA estimates using root-MUSIC algorithm
+% Compute "D" DoA estimates using the root-MUSIC algorithm
 %
 %% Variables Description
 %
+% Input Variables:
 % R: received signal covariance matrix
 % array: sensors positions
 % D: number of impinging sources
+% grid: discretized search grid
 % d: minimum inter-element spacing
-% doa: normalized DoAs (sine of DoA estimates)
+%
+% Output Variables:
+% doa: normalized DoAs (sine of DoAs)
 %
 %% References
 %
-% [1] 
+% [1] A. Barabell, “Improving the resolution performance of eigenstructure-based 
+% direction-finding algorithms,” in ICASSP ’83. IEEE International Conference on Acoustics, 
+% Speech, and Signal Processing, Boston, MASS, USA: Institute of Electrical and Electronics 
+% Engineers, 1983, pp. 336–339. doi: 10.1109/ICASSP.1983.1172124.
 %
-% Author: Wesley Leite
+% [2] H. L. Van Trees, Optimum Array Processing: Part IV of Detection, Estimation and Modulation Theory. 
+% New York: Wiley-Interscience, 2002.
+% 
+%% Author
+% Wesley S. Leite (2024)
 %
 %%
+
+if ~isSpacedByOne(array)
+    error('The array geometry for root-MUSIC must be a ULA!')
+end
+
 array = array(:);
 N = length(array);
 [delta,lambda] = eig(R); % perform eigendecomposition on R

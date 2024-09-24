@@ -87,7 +87,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,normSensorSpacing,ptsbeamp);
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);
         case 'II-NAQ2'
             arset(i).position = twonestarray(nSensorSubarrays(1));            
             for jj=2:length(nSensorSubarrays)
@@ -103,7 +103,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,normSensorSpacing,ptsbeamp);
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);
         case {'I-ULA','ULA'}
             arset(i).position = ularray(N);
             arset(i).mispos = setdiff(0:max(arset(i).position),arset(i).position); % mising sensors location
@@ -114,7 +114,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp);
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);
         case 'II-ULA'
             arset(i).position = ularray(nSensorSubarrays(1));
             for jj=2:length(nSensorSubarrays)
@@ -130,7 +130,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp);
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);
         case {'I-CPA','CPA'}
             arset(i).position = coprimearray(N);
             arset(i).mispos = setdiff(0:max(arset(i).position),arset(i).position); % mising sensors location
@@ -141,7 +141,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp);
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);
         case 'II-CPA'
             arset(i).position = coprimearray(nSensorSubarrays(1));             
             for jj=2:length(nSensorSubarrays)
@@ -157,7 +157,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp);
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);
         case {'I-SNAQ2','SNAQ2'}
             arset(i).position = supernestarray(N,2);
             arset(i).mispos = setdiff(0:max(arset(i).position),arset(i).position); % mising sensors location
@@ -168,7 +168,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp);
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);
         case 'II-SNAQ2'
             arset(i).position = supernestarray(nSensorSubarrays(1),2);            
             for jj=2:length(nSensorSubarrays)
@@ -184,7 +184,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp);        
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);        
         case {'I-MRA','MRA'}
             if(N<3||N>17)
                 error('The MRA database has arrays from 3 to 17 sensors!')
@@ -199,7 +199,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp);
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);
         case 'II-MRA'
             for ii=1:length(nSensorSubarrays)
                 if(nSensorSubarrays(ii)<3 || nSensorSubarrays(ii)>17)
@@ -221,7 +221,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp);
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);
         case {'I-GNA','GNA'}
             arset(i).position = genestarray(N);
             arset(i).mispos = setdiff(0:max(arset(i).position),arset(i).position); % mising sensors location
@@ -232,7 +232,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp);
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);
         case 'II-GNA'
             arset(i).position = genestarray(nSensorSubarrays(1));
             for jj=2:length(nSensorSubarrays)
@@ -248,7 +248,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp);        
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);        
         case 'I-CAD'
             arset(i).position = cadarray(N);
             arset(i).mispos = setdiff(0:max(arset(i).position),arset(i).position); % mising sensors location
@@ -259,7 +259,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp);
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);
         case 'II-CAD'
             arset(i).position = cadarray(nSensorSubarrays(1));            
             for jj=2:length(nSensorSubarrays)
@@ -275,7 +275,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp); 
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp); 
         case {'I-SNAQ3','SNAQ3'}
             arset(i).position = supernestarray(N,3);
             arset(i).mispos = setdiff(0:max(arset(i).position),arset(i).position); % mising sensors location
@@ -286,7 +286,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp);
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);
         case 'II-SNAQ3'
             arset(i).position = supernestarray(nSensorSubarrays(1),3);
             for jj=2:length(nSensorSubarrays)
@@ -302,7 +302,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp); 
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp); 
         case {'I-MHA','MHA'}
             if(N<3||N>17)
                 error('The MHA database has arrays from 3 to 17 sensors!')
@@ -317,7 +317,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp);
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);
         case 'II-MHA'
             for ii=1:length(nSensorSubarrays)
                 if(nSensorSubarrays(ii)<3 || nSensorSubarrays(ii)>17)
@@ -339,7 +339,7 @@ for i=1:nArrays
             arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
             arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                 ,'fro')/norm(arset(i).coupMat,'fro');
-            arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp);
+            arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);
         
         otherwise
             if strcmp(extractBefore(names{i},'-'),'FRAC')
@@ -359,7 +359,7 @@ for i=1:nArrays
                 arset(i).coupMat = mutcoup(arset(i).position,B); arset(i).udof = 2*M+1;
                 arset(i).leakCoef = norm(arset(i).coupMat-diag(diag(arset(i).coupMat))...
                     ,'fro')/norm(arset(i).coupMat,'fro');
-                arset(i).uniBeamPat = beampatt(arset(i).position,normSensorSpacing,ptsbeamp);
+                arset(i).uniBeamPat = beampatt(arset(i).position,ptsbeamp);
             else
                 error('Unknown geometry')
             end        
