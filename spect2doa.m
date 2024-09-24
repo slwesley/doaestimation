@@ -1,14 +1,24 @@
 function doa = spect2doa(spect,D,grid)
 %% Function Description
 %
-% This function computes the DoAs from a given input spectrum
+% Extract "D" DoA estimates from (pseudo)-spectrum
 %
 %% Variables Description
-% 
-% spect: pseudo-spectrum
-% grid: search grid
-% D: number of sources
-% doa: doa estimates
+%
+% Input Variables:
+% spect: (pseudo)-spectrum
+% D: number of impinging sources
+% grid: discretized search grid
+%
+% Output Variables:
+% doa: normalized DoAs (sine of DoAs)
+%
+%% References
+%
+% [1] The author.
+%
+%% Author
+% Wesley S. Leite (2024)
 %
 %%
 [~,peaksIndex] = findpeaks(abs(spect),'NPeaks',D,'SortStr','descend');
