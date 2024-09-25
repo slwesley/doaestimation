@@ -22,6 +22,9 @@ If you have any questions, feel free to reach out! I'm happy to assist.
 Contact: wesleysouzaleite {at} gmail.com
 
 Cheers,
+
 Wesley S. Leite
+
 Rio de Janeiro, RJ - Brazil
+
 September 24, 2024
