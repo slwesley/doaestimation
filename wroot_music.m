@@ -9,7 +9,6 @@ function doa = wroot_music(R,array,D,d)
 % R: received signal covariance matrix
 % array: sensors positions
 % D: number of impinging sources
-% grid: discretized search grid
 % d: minimum inter-element spacing
 %
 % Output Variables:

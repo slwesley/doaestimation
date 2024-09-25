@@ -10,17 +10,17 @@ clc; clear; close all % some cleaning
 %% Initial settings
 
 SNR = -15:5; % sets the SNR range
-snaps = 30:40:300; % sets multiple snapshot quantities (data samples)
+snaps = 30:40:350; % sets multiple snapshot quantities (data samples)
 
 % Spectrum-based algorithms to be simulated (1D search)
 % Choose between 'MUSIC','Bartlett', and 'MVDR'
-nameOfAlg_spect = {'MVDR'};
+nameOfAlg_spect = {'MUSIC','Bartlett','MVDR'};
 % nameOfAlg_spect = []; % uncomment to exclude this class of algorithms
 nAlgSpect = length(nameOfAlg_spect);
 
 % Search-free algorithms to be simulated
-% Choose between 'rMUSIC', and 'rMVDR'
-nameOfAlg_searchFree = {'rMVDR','rMUSIC'};
+% Choose between 'rMUSIC', 'rMVDR', and ,'LS-ESPRIT'
+nameOfAlg_searchFree = {'rMUSIC','rMVDR','LS-ESPRIT'};
 % nameOfAlg_searchFree = []; % uncomment to exclude this class of algorithms
 
 % Merge all algorithms
@@ -32,9 +32,11 @@ ptsbeamp = 512; % number of points for the beampattern evaluation
 
 %% Define array geometry
 % choose between 'ULA', 'MRA', 'MHA', 'NAQ2', 'SNAQ2' etc. Inspect
-% arraygen() for additional array geometries
+% arraygen() for additional array geometries, such as
+% rMUSIC, rMVDR: ULA / LS-ESPRIT: centro-symmetric arrays (ULA works,
+% because it is centro-symmetric
 nSensors = 10; % number of sensors
-nameOfArray = {'ULA'}; % Array geometry name. Choose one at a time
+nameOfArray = {'ULA'}; % Array geometry name. Choose only one geometry at a time
 normSensorSpacing = .5; % minimum intersensor spacing interms of carrier wavelength
 arrayStruct = arraygen(nSensors,1,nameOfArray,eye(nSensors),ptsbeamp,normSensorSpacing);
 
@@ -151,6 +153,8 @@ for k=1:length(SNR)
                     [doa_est] = wroot_music(R,arrayStruct.position,nSources,normSensorSpacing);
                 case 'rMVDR'
                     [doa_est] = wroot_mvdr(R,arrayStruct.position,nSources,normSensorSpacing);
+                case 'LS-ESPRIT'
+                    [doa_est] = wls_esprit(R,arrayStruct.position,nSources,normSensorSpacing);
                 otherwise
                     error([nameOfAlg{i},' is not a valid name for algorithm!']);
             end
@@ -185,6 +189,8 @@ for k=1:length(snaps)
                     [doa_est] = wroot_music(R,arrayStruct.position,nSources,normSensorSpacing);
                 case 'rMVDR'
                     [doa_est] = wroot_mvdr(R,arrayStruct.position,nSources,normSensorSpacing);
+                case 'LS-ESPRIT'
+                    [doa_est] = wls_esprit(R,arrayStruct.position,nSources,normSensorSpacing);
                 otherwise
                     error([nameOfAlg{i},' is not a valid name for algorithm!']);
             end

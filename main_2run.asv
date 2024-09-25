@@ -1,6 +1,6 @@
 clc; clear; close all % some cleaning
 %%
-% *Description* 
+% Description 
 % Performs parametric DoA estimation using second-order statistics,
 % assuming narrowband, far-field sources impinging on a linear sensor array
 %
@@ -10,17 +10,17 @@ clc; clear; close all % some cleaning
 %% Initial settings
 
 SNR = -15:5; % sets the SNR range
-snaps = 20:40:300; % sets multiple snapshot quantities (data samples)
+snaps = 30:40:300; % sets multiple snapshot quantities (data samples)
 
 % Spectrum-based algorithms to be simulated (1D search)
-% Choose between 'MUSIC','Bartlett', and 'Capon'
-nameOfAlg_spect = {'MUSIC','Bartlett','Capon'};
+% Choose between 'MUSIC','Bartlett', and 'MVDR'
+nameOfAlg_spect = {'MVDR'};
 % nameOfAlg_spect = []; % uncomment to exclude this class of algorithms
 nAlgSpect = length(nameOfAlg_spect);
-% TODO implement root-Capon, according to Van Trees' guidelines
+
 % Search-free algorithms to be simulated
-% Choose between 'rMUSIC', and 'rCapon'
-nameOfAlg_searchFree = {'rMUSIC'};
+% Choose between 'rMUSIC', and 'rMVDR'
+nameOfAlg_searchFree = {'rMVDR','rMUSIC','LS-ESPRIT'};
 % nameOfAlg_searchFree = []; % uncomment to exclude this class of algorithms
 
 % Merge all algorithms
@@ -117,7 +117,7 @@ if ~isempty(nameOfAlg_spect)
                 [~,spect(:,i)] = wmusic(R,arrayStruct.position,nSources,searchGrid,normSensorSpacing); % MUSIC algorithm
             case 'Bartlett'
                 [~,spect(:,i)] = wbart(R,arrayStruct.position,nSources,searchGrid,normSensorSpacing); % Bartlett beamformer for DoA estimation
-           case 'Capon'
+           case 'MVDR'
                 [~,spect(:,i)] = wmvdr(R,arrayStruct.position,nSources,searchGrid,normSensorSpacing); % Capon or MVDR beamformer for DoA estimation
             otherwise
                 error([nameOfAlg_spect{i},' is not a valid name for algorithm!'])
@@ -145,10 +145,12 @@ for k=1:length(SNR)
                     [doa_est,~] = wmusic(R,arrayStruct.position,nSources,searchGrid,normSensorSpacing);
                 case 'Bartlett'
                     [doa_est,~] = wbart(R,arrayStruct.position,nSources,searchGrid,normSensorSpacing);
-                case 'Capon'
+                case 'MVDR'
                     [doa_est,~] = wmvdr(R,arrayStruct.position,nSources,searchGrid,normSensorSpacing);
                 case 'rMUSIC'
                     [doa_est] = wroot_music(R,arrayStruct.position,nSources,normSensorSpacing);
+                case 'rMVDR'
+                    [doa_est] = wroot_mvdr(R,arrayStruct.position,nSources,normSensorSpacing);
                 otherwise
                     error([nameOfAlg{i},' is not a valid name for algorithm!']);
             end
@@ -177,10 +179,12 @@ for k=1:length(snaps)
                     [doa_est,~] = wmusic(R,arrayStruct.position,nSources,searchGrid,normSensorSpacing);
                 case 'Bartlett'
                     [doa_est,~] = wbart(R,arrayStruct.position,nSources,searchGrid,normSensorSpacing);
-                case 'Capon'
+                case 'MVDR'
                     [doa_est,~] = wmvdr(R,arrayStruct.position,nSources,searchGrid,normSensorSpacing);
                 case 'rMUSIC'
                     [doa_est] = wroot_music(R,arrayStruct.position,nSources,normSensorSpacing);
+                case 'rMVDR'
+                    [doa_est] = wroot_mvdr(R,arrayStruct.position,nSources,normSensorSpacing);
                 otherwise
                     error([nameOfAlg{i},' is not a valid name for algorithm!']);
             end
@@ -194,8 +198,9 @@ for k=1:nAlg
     RMSE_snaps(k,:) = squeeze(sqrt(mean(squared_errors_snaps(k,:,:),3)));
 end
 %% C) Plotting 
+% In section C), we handle the plotting.
 
-%% C.1) Beam Pattern
+%% C.1) Array geometry beam pattern 
 
 figure; % open new figure object
 title(nameOfArray,'FontSize',14) % set title
@@ -203,31 +208,33 @@ ax = gca; ax.FontSize = 15;  % change default axis font size
 ylabel('Beam Pattern (dB)','FontSize',16); % change y-axis label
 xlabel('$\theta$','Interpreter','latex','FontSize',20); % change x-axis label
 hold on; % freeze plots in the loop after adding them
-xlim([-1 1]); % lower and upper limits for x-axis (limits for the field of view)
+xlim([-.98 .98]); % lower and upper limits for x-axis (limits for the field of view)
 domain_bp = linspace(-1,1,ptsbeamp);
 beamPattern = beampatt(arrayStruct.position,normSensorSpacing,ptsbeamp);
-plot(domain_bp,beamPattern,'-.','Color',colors_custom.values(1,:),'LineWidth',1.5);
+plot(domain_bp,beamPattern,'k-','LineWidth',1.5);
 
 
-%% C.1) Spectra plots
-figure; % open new figure object
-vline(effectiveTheta.'); % draw DoAs as vertical black dashed lines
-xticks(round(effectiveTheta,2))  % set customized ticks for x-axis
-title(nameOfArray,'FontSize',14) % set title
-ax = gca; ax.FontSize = 15;  % change default axis font size
-ylabel('Normalized Power Spectrum','FontSize',16); % change y-axis label
-xlabel('$\theta$','Interpreter','latex','FontSize',20); % change x-axis label
-hold on; % freeze plots in the loop after adding them
-axis([-.6 .6 0 1.05]); % lower and upper limits for x- and y-axis
+%% C.2) Spectra 
+
 if ~isempty(nameOfAlg_spect)
+    figure; % open new figure object
+    vline(effectiveTheta.'); % draw DoAs as vertical black dashed lines
+    xticks(round(effectiveTheta,2))  % set customized ticks for x-axis
+    title(nameOfArray,'FontSize',14) % set title
+    ax = gca; ax.FontSize = 15;  % change default axis font size
+    ylabel('Normalized Power Spectrum','FontSize',16); % change y-axis label
+    xlabel('$\theta$','Interpreter','latex','FontSize',20); % change x-axis label
+    hold on; % freeze plots in the loop after adding them
+    axis([-.6 .6 0 1.05]); % lower and upper limits for x- and y-axis
     for i=1:nAlgSpect
         plot(searchGrid,spect(:,i)/max(abs(spect(:,i))),'-','Color',colors_custom.values(i,:),'LineWidth',1.5);
     end
     legend(nameOfAlg_spect,'FontSize',14) % update legend with the name of all spectrum-based algorithms
 end
 
-%% C.2) RMSE curves
-% C.2.1) RMSE curves against SNR
+%% C.3) RMSE curves
+
+% C.3.1) RMSE curves against SNR
 hh = figure;
 subplot(1,2,1); hold on; grid
 ax1 = gca; ax1.FontSize = 15;  % Change this to your desired font size
@@ -241,7 +248,7 @@ xlabel('SNR (dB)','FontSize',14); ylabel('RMSE','FontSize',14);
 legend(nameOfAlg,'FontSize',14);
 set(gca,'YScale','log');
 
-% C.2.2) RMSE curves against snapshots
+% C.3.2) RMSE curves against snapshots
 subplot(1,2,2); hold on; grid
 ax2 = gca; ax2.FontSize = 15;  % Change this to your desired font size
 axis([snaps(1) snaps(end) min(RMSE_snaps(:)) max(RMSE_snaps(:))]); % lower and upper limits for x- and y-axis
@@ -255,5 +262,3 @@ legend(nameOfAlg,'FontSize',14);
 set(gca,'YScale','log');
 sgtitle('ULA', 'FontSize', 14, 'FontWeight', 'bold'); % title for both subplots
 hh.PaperPositionMode = 'auto';
-
-% TODO Beamforming plots
