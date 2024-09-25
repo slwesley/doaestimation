@@ -1,7 +1,8 @@
 # doaestimation
-This repository contains general MATLAB code for DoA (Direction of Arrival) estimation algorithms based on second-order statistics.
+This repository contains MATLAB code for DoA (Direction of Arrival) estimation algorithms that use second-order statistics. To get started, run the main script: main_2run.m.
+
 ## Array Geometries
-The code supports multiple array geometries, including ULA (Uniform Linear Array) and various sparse linear array configurations (NLAs or SLAs). To get started, choose an array geometry, an algorithm and run the main file: main_2run.m.
+The code supports multiple array geometries, including ULA (Uniform Linear Array) and various sparse linear array configurations (NLAs or SLAs). At the start, choose both an array geometry and an algorithm.
 
 ## Algorithms
 There are two types of algorithms available:
