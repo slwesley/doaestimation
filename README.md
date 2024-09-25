@@ -8,6 +8,7 @@ The code supports multiple array geometries, including ULA (Uniform Linear Array
 There are two types of algorithms available:
 - Spectrum-like algorithms
 - Search-free algorithms
+
 (Pseudo-)Spectrum plots are generated for spectrum-like algorithms. Additionally, RMSE (Root Mean Square Error) curves against SNR and snapshots can be plotted for both spectrum-like and search-free algorithms.
 
 Please note: some algorithms are designed to work with specific geometries. For example, ULA is compatible with all algorithms, but MRA cannot be used with root-MUSIC or root-MVDR, since those algorithms specifically requires ULA geometry.
